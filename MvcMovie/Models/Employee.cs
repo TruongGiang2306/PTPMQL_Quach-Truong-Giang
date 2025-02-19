@@ -1,4 +1,9 @@
-namespace DemoMVC.Models.Entities
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using MvcMovie.Models;
+
+namespace DemoMVC.Models
 {
     public class Employee : Person
     {
