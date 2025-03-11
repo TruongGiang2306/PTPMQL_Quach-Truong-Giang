@@ -19,7 +19,7 @@ namespace MvcMovie.Controllers
             model.ThanhTien = model.SoLuong * model.DonGia;
 
             // Gửi thông báo về View
-            ViewBag.ThongBao = "Thành tiền của mặt hàng " + model.TenHang + " là: " + model.ThanhTien;
+            ViewBag.ThongBao = "Thành tiền của mặt hàng " + model.TenHang + " là: " + model.ThanhTien + "đ";
 
             return View("Index");
         }
