@@ -1,7 +1,12 @@
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MvcMovie.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using MvcMovie.Data;
+using MvcMovie.Models;
 
 namespace MvcMovie.Controllers
 {
@@ -13,18 +18,40 @@ namespace MvcMovie.Controllers
         {
             _context = context;
         }
-// ------------------------------------------------
+
+        // GET: Person
         public async Task<IActionResult> Index()
         {
-            var model = await _context.Person.ToListAsync();
-            return View(model);
+            return View(await _context.Person.ToListAsync());
         }
-// ------------------------------------------------
+
+        // GET: Person/Details/5
+        public async Task<IActionResult> Details(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var person = await _context.Person
+                .FirstOrDefaultAsync(m => m.PersonID == id);
+            if (person == null)
+            {
+                return NotFound();
+            }
+
+            return View(person);
+        }
+
+        // GET: Person/Create
         public IActionResult Create()
         {
             return View();
         }
 
+        // POST: Person/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PersonID,FullName,Address")] Person person)
@@ -37,10 +64,11 @@ namespace MvcMovie.Controllers
             }
             return View(person);
         }
-// ------------------------------------------------
+
+        // GET: Person/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null || _context.Person == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -53,6 +81,9 @@ namespace MvcMovie.Controllers
             return View(person);
         }
 
+        // POST: Person/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("PersonID,FullName,Address")] Person person)
@@ -84,10 +115,11 @@ namespace MvcMovie.Controllers
             }
             return View(person);
         }
-// ------------------------------------------------
+
+        // GET: Person/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.Person == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -102,14 +134,11 @@ namespace MvcMovie.Controllers
             return View(person);
         }
 
+        // POST: Person/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (_context.Person == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Person' is null.");
-            }
             var person = await _context.Person.FindAsync(id);
             if (person != null)
             {
@@ -119,23 +148,10 @@ namespace MvcMovie.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-// ------------------------------------------------
+
         private bool PersonExists(string id)
         {
-            return (_context.Person?.Any(e => e.PersonID == id)).GetValueOrDefault();
+            return _context.Person.Any(e => e.PersonID == id);
         }
-// ------------------------------------------------
-        // public IActionResult Index()
-        // {
-        //     return View();
-        // }
-
-        // [HttpPost]
-        // public IActionResult Index(Person ps)
-        // {
-        //     string strOutput = "Xin chào " + ps.PersonID + "-" + ps.FullName + "-" + ps.Address;
-        //     ViewBag.infoPerson = strOutput;
-        //     return View();
-        // }
     }
 }

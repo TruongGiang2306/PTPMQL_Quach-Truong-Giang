@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MvcMovie.Models;
+using DemoMVC.Models;
 
 
 namespace MvcMovie.Data
@@ -10,5 +11,7 @@ namespace MvcMovie.Data
         {}
 
         public DbSet<Person> Person { get; set; }
+        public DbSet<DemoMVC.Models.Employee> Employee { get; set; } = default!;
     }
 }
+
